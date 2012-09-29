@@ -1,0 +1,11 @@
+{
+  "name": "securityrace",
+  "description": "Two network users race to see who can do more https requests versus insecure http!",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "pcap": "0.3.x",
+    "socket.io": "0.9.x"
+  }
+}
