@@ -18,12 +18,12 @@ nconf.load();
 
 game = {
   player1: {
-    ip: '',
+    ip: '10.42.0.72',
     name: '',
     score: 0
   },
   player2: {
-    ip: '',
+    ip: '10.42.0.64',
     name: '',
     score: 0
   }
@@ -66,6 +66,9 @@ app.get('/', function (req, res) {
 
 io.sockets.on('connection', function (socket) {
   socket.emit('gamestate', game);
+  setInterval(function() {
+    socket.emit('gamestate', game);
+  }, 2000);
   socket.on('newgame', function(players) {
     // setup
     game.player1.name = players[0];
@@ -73,19 +76,18 @@ io.sockets.on('connection', function (socket) {
     // scoring
     tcp_tracker.on('start', function (session) {
       if (session.dst.match(/:443$/)) {
-        if (session.src.indexOf(game.player1.ip) === 0) {
+        if (session.src_name.indexOf(game.player1.ip) === 0) {
           game.player1.score++;
-        } else if (session.src.indexOf(game.player2.ip) === 0){
+        } else if (session.src_name.indexOf(game.player2.ip) === 0){
           game.player2.score++;
         }
       } else {
-        if (session.src.indexOf(game.player1.ip) === 0) {
+        if (session.src_name.indexOf(game.player1.ip) === 0) {
           game.player1.score--;
-        } else if (session.src.indexOf(game.player2.ip) === 0){
+        } else if (session.src_name.indexOf(game.player2.ip) === 0){
           game.player2.score--;
         }
       }
-      socket.emit('gamestate', game);
     });
   });
   socket.on('endgame', function() {
