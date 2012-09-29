@@ -72,12 +72,20 @@ io.sockets.on('connection', function (socket) {
     game.player2.name = players[1];
     // scoring
     tcp_tracker.on('start', function (session) {
-      socket.emit('gamestate', game);
       if (session.dst.match(/:443$/)) {
-        game.player1.score++;
+        if (session.src.indexOf(game.player1.ip) === 0) {
+          game.player1.score++;
+        } else if (session.src.indexOf(game.player2.ip) === 0){
+          game.player2.score++;
+        }
       } else {
-        game.player1.score--;
+        if (session.src.indexOf(game.player1.ip) === 0) {
+          game.player1.score--;
+        } else if (session.src.indexOf(game.player2.ip) === 0){
+          game.player2.score--;
+        }
       }
+      socket.emit('gamestate', game);
     });
   });
   socket.on('endgame', function() {
