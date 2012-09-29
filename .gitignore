@@ -1,3 +1,5 @@
 /node_modules/.bin/
+/node_modules/nconf/
 /node_modules/express/
 /node_modules/socket.io/
+/highscores.json

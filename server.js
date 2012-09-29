@@ -1,4 +1,5 @@
 var sys          = require('sys'),
+    nconf        = require('nconf'),
     express      = require('express'),
     app          = express(),
     server       = require('http').createServer(app),
@@ -6,13 +7,26 @@ var sys          = require('sys'),
     pcap         = require('pcap'),
     tcp_tracker  = new pcap.TCP_tracker(),
     pcap_session = pcap.createSession('eth0', 'ip proto \\tcp and tcp port 443 || 80');
-    scoreboard   = {};
+    game         = {};
+
+// high scores!
+
+nconf.use('file', { file: './highscores.json' });
+nconf.load();
 
 // game counter
 
-scoreboard = {
-  player1: 0,
-  player2: 0
+game = {
+  player1: {
+    ip: '',
+    name: '',
+    score: 0
+  },
+  player2: {
+    ip: '',
+    name: '',
+    score: 0
+  }
 };
 
 // pcap
@@ -26,12 +40,7 @@ setInterval(function () {
 
 tcp_tracker.on('start', function (session) {
   console.log('tcp start btw ' + session.src_name + ' and ' + session.dst_name);
-  if (session.dst.match(/:443$/)) {
-    scoreboard.player1++;
-  } else {
-    scoreboard.player1--;
-  }
-  console.log('score: ' + scoreboard.player1);
+  console.log('score: ' + game.player1.score);
   //console.log(sys.inspect(session));
 });
 
@@ -56,6 +65,28 @@ app.get('/', function (req, res) {
 });
 
 io.sockets.on('connection', function (socket) {
-  socket.emit('score', scoreboard);
-  tcp_tracker.on('start', function () { socket.emit('score', scoreboard) });
+  socket.emit('gamestate', game);
+  socket.on('newgame', function(players) {
+    // setup
+    game.player1.name = players[0];
+    game.player2.name = players[1];
+    // scoring
+    tcp_tracker.on('start', function (session) {
+      socket.emit('gamestate', game);
+      if (session.dst.match(/:443$/)) {
+        game.player1.score++;
+      } else {
+        game.player1.score--;
+      }
+    });
+  });
+  socket.on('endgame', function() {
+    var gameid = Math.round((new Date()).getTime() / 1000); // unix timestamp
+    nconf.set(gameid+':state', 'finished');
+    nconf.set(gameid+':p1:name', game.player1.name);
+    nconf.set(gameid+':p1:score', game.player1.score);
+    nconf.set(gameid+':p2:name', game.player2.name);
+    nconf.set(gameid+':p2:score', game.player2.score);
+    nconf.save();
+  });
 });

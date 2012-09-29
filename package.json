@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "nconf": "0.6.x",
     "express": "3.x",
     "pcap": "git://github.com/bnchdrff/node_pcap.git#master",
     "socket.io": "0.9.x"
