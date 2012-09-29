@@ -32,7 +32,7 @@ var startgame = function() {
 var stopgame = function() {
   // stop it
   socket.emit('endgame');
-  $('#p1 h2, #p2 h2, #thisgame').each(function() {
+  $('#p1 h2, #p2 h2, #p1 h3, #p2 h3').each(function() {
     $(this).text('');
   });
   $('#p1 input, #p2 input').show();
@@ -42,14 +42,15 @@ var stopgame = function() {
 
 socket.on('gamestate', function (gamestate) {
   console.log(gamestate);
-  $('#p1 h2').text(gamestate.player1.name);
-  $('#p2 h2').text(gamestate.player2.name);
   game = gamestate;
-  $('#thisgame').text('This game: ' + game.player1.name + ' scored ' + game.player1.score + ' and ' + game.player2.name + ' scored ' + game.player2.score);
   if (gamestate.player1.name.length > 0) {
     $('#p1 input').val('').hide();
     $('#p2 input').val('').hide();
     $('#startstop').text('STOP');
+    $('#p1 h2').text(gamestate.player1.name);
+    $('#p2 h2').text(gamestate.player2.name);
+    $('#p1 h3').text(gamestate.player1.score);
+    $('#p2 h3').text(gamestate.player2.score);
   }
 });
 

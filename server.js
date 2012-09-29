@@ -98,5 +98,6 @@ io.sockets.on('connection', function (socket) {
     nconf.set(gameid+':p2:name', game.player2.name);
     nconf.set(gameid+':p2:score', game.player2.score);
     nconf.save();
+    game.player1.name = game.player1.score = game.player2.name = game.player2.score = '';
   });
 });
