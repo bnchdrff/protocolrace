@@ -18,12 +18,12 @@ nconf.load();
 
 game = {
   player1: {
-    ip: '10.42.0.72',
+    ip: '10.42.0.20',
     name: '',
     score: 0
   },
   player2: {
-    ip: '10.42.0.64',
+    ip: '10.42.0.78',
     name: '',
     score: 0
   }
