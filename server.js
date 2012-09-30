@@ -29,7 +29,7 @@ game = {
   }
 };
 
-// pcap
+// pcap ("inspired" by the node_pcap examples)
 
 setInterval(function () {
   var stats = pcap_session.stats();
