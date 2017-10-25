@@ -2,6 +2,12 @@
 
 A game for the September 29 2012 DiscoTech at Kemeny Rec Center
 
+Two players compete to have the most HTTPS requests (vs HTTP).
+
+![Scoreboard (photo credit Nina Bianchi)](https://user-images.githubusercontent.com/99194/31977823-a0202f70-b90c-11e7-977b-b74dc3e7504d.jpg)
+
+![Players (photo credit Nina Bianchi)](https://user-images.githubusercontent.com/99194/31977824-a030a918-b90c-11e7-9621-f6c202023eb3.jpg)
+
 ## Network setup
 
 One computer serves as an internet gateway, and two computers run WWW browsers.
